@@ -16,6 +16,7 @@
         android:hint="Anz."
         android:inputType="number"
         android:minHeight="48dp"
+        android:nextFocusDown="@id/et_product"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -30,6 +31,7 @@
         android:hint="Artikel"
         android:inputType="textPersonName"
         android:minHeight="48dp"
+        android:nextFocusDown="@id/btn_add_product"
         app:layout_constraintEnd_toStartOf="@+id/btn_add_product"
         app:layout_constraintStart_toEndOf="@+id/et_quantity"
         app:layout_constraintTop_toTopOf="parent" />
