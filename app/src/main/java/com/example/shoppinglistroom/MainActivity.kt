@@ -30,6 +30,14 @@ class MainActivity : AppCompatActivity() {
             adapter.setShoppingMemos(it)
         }
 
+        adapter.setOnItemClickListener(object : ShoppingMemoListAdapter.OnItemClickListener {
+            override fun onItemClick(memo: ShoppingMemo) {
+               memo.isSelected = !memo.isSelected
+                shoppingMemoViewModel.insertOrUpdate(memo)
+            }
+
+        })
+
         binding.btnAddProduct.setOnClickListener {
             if(TextUtils.isEmpty(binding.etQuantity.text)){
                 binding.etQuantity.error="Feld darf nicht leer sein"
