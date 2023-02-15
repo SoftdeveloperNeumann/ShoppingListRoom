@@ -3,6 +3,7 @@ package com.example.shoppinglistroom
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import com.example.shoppinglistroom.databinding.ActivityMainBinding
+import com.example.shoppinglistroom.viewmodel.ShoppingMemoViewModel
 
 class MainActivity : AppCompatActivity() {
 
@@ -12,5 +13,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+
     }
 }
