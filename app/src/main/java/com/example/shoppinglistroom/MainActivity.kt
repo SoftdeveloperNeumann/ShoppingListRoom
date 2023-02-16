@@ -1,5 +1,8 @@
 package com.example.shoppinglistroom
 
+import android.graphics.Canvas
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.TextUtils
@@ -119,6 +122,63 @@ class MainActivity : AppCompatActivity() {
                     }
                 }
             }
+
+            override fun onChildDraw(
+                c: Canvas,
+                recyclerView: RecyclerView,
+                viewHolder: RecyclerView.ViewHolder,
+                dX: Float,
+                dY: Float,
+                actionState: Int,
+                isCurrentlyActive: Boolean
+            ) {
+                super.onChildDraw(
+                    c,
+                    recyclerView,
+                    viewHolder,
+                    dX,
+                    dY,
+                    actionState,
+                    isCurrentlyActive
+                )
+                // Version ohne SwipeDecorator
+//                val itemView = viewHolder.itemView
+//                val background = ColorDrawable(Color.LTGRAY)
+//                val iconDelete = getDrawable(R.drawable.ic_delete_black_24dp)
+//                val iconEdit = getDrawable(R.drawable.ic_edit_black_24dp)
+//                val backgroundCornerOffset = 20
+//                val iconMargin = (itemView.height - iconEdit!!.intrinsicHeight) / 2
+//                val iconTop =
+//                    itemView.top + (itemView.height - iconEdit.intrinsicHeight) / 2
+//                val iconBottom = iconTop + iconEdit.intrinsicHeight
+//                if (dX > 0) { // Swiping to the right
+//                    val iconLeft =
+//                        itemView.left + iconMargin + iconDelete!!.intrinsicWidth
+//                    val iconRight = itemView.left + iconMargin
+//                    iconDelete.setBounds(iconLeft, iconTop, iconRight, iconBottom)
+//                    background.setBounds(
+//                        itemView.left,
+//                        itemView.top,
+//                        itemView.left + dX.toInt() + backgroundCornerOffset,
+//                        itemView.bottom
+//                    )
+//                } else if (dX < 0) { // Swiping to the left
+//                    val iconLeft =
+//                        itemView.right - iconMargin - iconEdit!!.intrinsicWidth
+//                    val iconRight = itemView.right - iconMargin
+//                    iconEdit.setBounds(iconLeft, iconTop, iconRight, iconBottom)
+//                    background.setBounds(
+//                        itemView.right + dX.toInt() - backgroundCornerOffset,
+//                        itemView.top, itemView.right, itemView.bottom
+//                    )
+//                } else { // view is unSwiped
+//                    background.setBounds(0, 0, 0, 0)
+//                }
+//                background.draw(c)
+//                iconDelete!!.draw(c)
+//                iconEdit!!.draw(c)
+            }
+
         })
         itemTouchHelper.attachToRecyclerView(binding.rvShoppingMemos)
     }
