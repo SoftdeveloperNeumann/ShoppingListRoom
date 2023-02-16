@@ -20,6 +20,7 @@ import com.example.shoppinglistroom.databinding.ActivityMainBinding
 import com.example.shoppinglistroom.databinding.DialogEditShoppingMemoBinding
 import com.example.shoppinglistroom.viewmodel.ShoppingMemoViewModel
 import com.google.android.material.snackbar.Snackbar
+import it.xabaras.android.recyclerview.swipedecorator.RecyclerViewSwipeDecorator
 
 class MainActivity : AppCompatActivity() {
 
@@ -141,6 +142,21 @@ class MainActivity : AppCompatActivity() {
                     actionState,
                     isCurrentlyActive
                 )
+                RecyclerViewSwipeDecorator.Builder(
+                    c,
+                    recyclerView,
+                    viewHolder,
+                    dX,
+                    dY,
+                    actionState,
+                    isCurrentlyActive
+                )
+                    .addBackgroundColor(Color.LTGRAY)
+                    .addSwipeLeftActionIcon(R.drawable.ic_edit_black_24dp)
+                    .addSwipeRightActionIcon(R.drawable.ic_delete_black_24dp)
+                    .create()
+                    .decorate()
+
                 // Version ohne SwipeDecorator
 //                val itemView = viewHolder.itemView
 //                val background = ColorDrawable(Color.LTGRAY)
