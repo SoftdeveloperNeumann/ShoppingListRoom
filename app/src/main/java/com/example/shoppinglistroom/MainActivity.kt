@@ -3,23 +3,33 @@ package com.example.shoppinglistroom
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.TextUtils
+import android.view.View
+import android.view.View.OnClickListener
+import android.view.ViewGroup
+import androidx.appcompat.app.AlertDialog
 import androidx.lifecycle.ViewModel
+import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.shoppinglistroom.adapter.ShoppingMemoListAdapter
 import com.example.shoppinglistroom.database.ShoppingMemo
 import com.example.shoppinglistroom.databinding.ActivityMainBinding
+import com.example.shoppinglistroom.databinding.DialogEditShoppingMemoBinding
 import com.example.shoppinglistroom.viewmodel.ShoppingMemoViewModel
+import com.google.android.material.snackbar.Snackbar
 
 class MainActivity : AppCompatActivity() {
 
     private val adapter: ShoppingMemoListAdapter = ShoppingMemoListAdapter()
     private lateinit var binding: ActivityMainBinding
+    private lateinit var dialogBinding: DialogEditShoppingMemoBinding
     private lateinit var shoppingMemoViewModel: ShoppingMemoViewModel
+    private lateinit var itemTouchHelper: ItemTouchHelper
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
+        dialogBinding = DialogEditShoppingMemoBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
         binding.rvShoppingMemos.layoutManager = LinearLayoutManager(this)
@@ -63,6 +73,53 @@ class MainActivity : AppCompatActivity() {
             binding.btnAddProduct.performClick()
         }
 
+        itemTouchHelper = ItemTouchHelper(object : ItemTouchHelper.SimpleCallback(
+            0,ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT) {
+            override fun onMove(
+                recyclerView: RecyclerView,
+                viewHolder: RecyclerView.ViewHolder,
+                target: RecyclerView.ViewHolder
+            ): Boolean {
+                return false
+            }
 
+            override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+                val currentMemo = shoppingMemoViewModel.getAllShoppingMemos()!!.value?.get(viewHolder.adapterPosition)
+                when(direction){
+                    ItemTouchHelper.RIGHT ->{
+                        shoppingMemoViewModel.delete(currentMemo!!)
+                        Snackbar.make(this@MainActivity,binding.root,"Löschen Rückgängig machen", Snackbar.LENGTH_LONG)
+                            .setAction("UNDO",object : OnClickListener {
+                                override fun onClick(v: View?) {
+                                    shoppingMemoViewModel.insertOrUpdate(currentMemo)
+                                }
+                            }).show()
+                    }
+                    ItemTouchHelper.LEFT ->{
+                        val builder = AlertDialog.Builder(this@MainActivity)
+                        dialogBinding.etEditQuantity.setText(currentMemo?.quantity.toString())
+                        dialogBinding.etEditProduct.setText(currentMemo?.product)
+                        val dialogView = dialogBinding.root
+                        if(dialogView.parent != null){
+                            (dialogView.parent as ViewGroup).removeView(dialogView)
+                        }
+                        builder.setView(dialogView)
+                            .setTitle("Eintrag ändern")
+                            .setPositiveButton("Ändern"){dialog,wich ->
+                                currentMemo?.quantity = dialogBinding.etEditQuantity.text.toString().toInt()
+                                currentMemo?.product = dialogBinding.etEditProduct.text.toString()
+                                shoppingMemoViewModel.insertOrUpdate(currentMemo!!)
+                                dialog.dismiss()
+                            }
+                            .setNegativeButton("Abbrechen"){dialog,wich ->
+                                adapter.notifyDataSetChanged()
+                                dialog.cancel()
+                            }
+                            .create().show()
+                    }
+                }
+            }
+        })
+        itemTouchHelper.attachToRecyclerView(binding.rvShoppingMemos)
     }
 }
